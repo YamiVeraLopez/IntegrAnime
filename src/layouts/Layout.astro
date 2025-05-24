@@ -1,3 +1,6 @@
+---
+const { title } = Astro.props; 
+---
 <!doctype html>
 <html lang="en">
 	<head>
@@ -5,18 +8,68 @@
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
 	</head>
 	<body>
 		<slot />
 	</body>
 </html>
 
-<style>
-	html,
-	body {
+<style is:global>
+@import url('https://fonts.googleapis.com/css2?family=Dongle&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+	/* RESET de CSS */
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
 		margin: 0;
-		width: 100%;
-		height: 100%;
+		padding: 0;
+	}
+
+	:root {
+		--white: oklch(1 0 0);
+		--black: oklch(0 0 0);
+		--grey: oklch(33.7% -0.012 94.24);
+		--violet: oklch(18.5% 0.07 308.5);
+		--dark-blue: oklch(10.4% 0.03 269.3);
+		--purple: oklch(45.29% 0.244 312.88);
+		--indigo: oklch(0.4465 0.1292 283.79);
+		--peachy-cream: oklch(90.35% 4.85% 38.8);
+		--creamy-ivory: oklch(96.47% 1.58% 73.68);
+	}
+
+	html {
+		font-size: 20px;
+		 font-family: "Poppins", sans-serif;
+	}
+
+	body {
+		min-height: 100vh;
+		line-height: 1.5;
+		color: var(--grey);
+		background: radial-gradient(
+			circle,
+			var(--creamy-ivory) 1%,
+			var(--white) 100%
+		);
+	}
+
+	img,
+	picture,
+	video,
+	canvas,
+	svg {
+		max-width: 100%;
+		height: auto;
+		vertical-align: middle;
+	}
+
+	input,
+	button,
+	textarea,
+	select {
+		font: inherit;
 	}
 </style>
+

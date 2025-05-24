@@ -1,0 +1,103 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Home from "@components/icons/Home.astro";
+import AddList from "@components/icons/AddList.astro";
+import User from "@components/icons/User.astro";
+---
+
+<Layout>
+	<header>
+		<nav class="navbar">
+			<ul class="navbar__list">
+				<li class="navbar__list__item" title="Añadir serie"> 
+					<a href="#add-list">
+						<picture>
+							<AddList
+								height="40"
+								width="40"
+								fill="#666666"
+								className="icon"
+							/>
+						</picture>
+					</a>
+				</li>
+				<li class="navbar__list__item" title="Inicio">
+					<a href="/">
+						<picture>
+							<Home
+								height="40"
+								width="40"
+								fill="#666666"
+								className="icon"
+							/>
+						</picture>
+					</a>
+				</li>
+				<li class="navbar__list__item" title="Mi perfil">
+					<a href="#">
+						<picture>
+							<User
+								height="40"
+								width="40"
+								fill="#666666"
+								className="icon"
+							/>
+						</picture>
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+</Layout>
+
+<style>
+	header {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+	}
+	.navbar {
+		grid-column: 2 / span 10;
+		place-items: center;
+		height: 100px;
+		background-color: color-mix(in oklch, var(--white) 80%, transparent);
+		border: 1px solid color-mix(in oklch, var(--indigo) 12%, transparent);
+		backdrop-filter: blur(15px);
+		border-radius: 10px 10px 90em 90em;
+		padding: 2rem;
+		padding-bottom: 2.5rem;
+	}
+
+	.navbar__list {
+		height: 100%;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+		list-style: none;
+	}
+	.navbar__list__item {
+		padding: 0.8rem;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.navbar__list__item:hover {
+		background-color: color-mix(in oklch, var(--indigo) 12%, transparent);
+		border-radius: 30%;
+		box-shadow: 0 0 10px color-mix(in oklch, var(--indigo) 12%, transparent);
+	}
+	.navbar__list__item:hover ~ .icon {
+		fill: color-mix(in oklch, var(--indigo) 80%, transparent);
+		transform: scale(1.2);
+	}
+
+    @media screen and (min-width: 768px) {
+        .navbar {
+            grid-column: 4 / span 6;
+            padding: 1rem;
+        }
+        .navbar__list {
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        
+    }
+</style>

@@ -1,0 +1,44 @@
+---
+import Layout from "@layouts/Layout.astro";
+import CardFooter from "@components/CardFooter.astro";
+---
+<Layout>
+    <footer class="footer">
+        <h2 class="footer__title">Hecho con 💖 por:</h2>
+        <section class="footer__cards">
+            <CardFooter name="Benjamín Centurion" linkLinkedin="" linkGithub="" />
+            <CardFooter name="Edgardo De la Cruz" linkLinkedin="" linkGithub="" />
+            <CardFooter name="Esteban Karaputny" linkLinkedin="" linkGithub="" />
+            <CardFooter img="https://i.pinimg.com/736x/24/28/9b/24289bdb727560a932b42cdebaa098e2.jpg" name="Yamila Vera López" linkLinkedin="https://www.linkedin.com/in/yamila-vera-lopez-6b3910362/" linkGithub="https://github.com/YamiVeraLopez" />
+        </section>
+    </footer>   
+</Layout>
+
+<style>
+    .footer {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-column: 1 / -1;
+        place-items: center;
+        margin-top: 20px;
+        background-color: color-mix(in oklch, var(--white) 80%, transparent);
+		border: 1px solid color-mix(in oklch, var(--indigo) 12%, transparent);
+		backdrop-filter: blur(15px);
+        padding: 1rem;
+		.footer__title {
+			grid-column: 1 / -1;
+			margin-bottom: 10px;
+            font-size: 1rem;
+            font-weight: 400;
+            color: color-mix(in oklch, var(--black) 80%, transparent);
+		}
+		.footer__cards {
+            grid-column: 1 / -1;
+            width: 100%;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            place-items: center;
+			gap: 5px;
+		}
+	}
+</style>
