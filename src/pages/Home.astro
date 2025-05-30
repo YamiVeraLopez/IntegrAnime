@@ -1,0 +1,43 @@
+---
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import Carrusel  from '../components/Carrusel.astro';
+//URL__API = 'https://api.jikan.moe/v4/top/anime';
+---
+
+
+<PageLayout>
+    <Header />
+
+    <main>
+        <!-- Carrusel -->
+            <Carrusel />
+        <!-- Mis listas -->
+        <section>
+            <h2>Mis Listas</h2>
+            <p>En construcción...</p>
+        </section>
+        <!-- Tendencias -->
+            <section>
+                <h2>Tendencias</h2>
+                <p>En construcción...</p>
+            </section>
+        <!-- Finalizados -->
+            <section>
+                <h2>Finalizados</h2>
+                <p>En construcción...</p>
+            </section>
+        <!-- En emisión -->
+            <section>
+                <h2>En emisión</h2>
+                <p>En construcción...</p>
+            </section>
+    </main>
+    <Footer />
+</PageLayout>
+<script>
+    // Aquí puedes agregar cualquier script necesario para la página+
+</script>
+<style>
+</style>
