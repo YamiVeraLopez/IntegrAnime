@@ -1,0 +1,117 @@
+---
+import Layout from "@layouts/Layout.astro";
+const { id, urlPoster, name, progress, platform, draggable } = Astro.props;
+---
+
+<Layout>
+	<div class="list__item" draggable={draggable}>
+		<picture class="list__item__poster">
+			<img src={urlPoster} alt={name} />
+		</picture>
+		<div class="list__item__info">
+			<p class="list__item__name">
+                <a href="#">{name}</a>
+            </p>
+			<p class="list__item__progress" id={`progress-${id}`}>
+				Porcentaje visto: {progress}%
+			</p>
+			<p class="list__item__platform">Plataforma: {platform}</p>
+		</div>
+
+		<div class="list__item__check">
+			<input
+				type="checkbox"
+				id={`view-${id}`}
+				checked={progress === 100}
+				data-id={id}
+			/>
+		</div>
+	</div>
+</Layout>
+
+
+<style>
+	.list__item {
+		display: grid;
+		grid-template-columns: 1fr 2fr 1fr;
+		place-items: center;
+		border: 1px solid var(--indigo);
+		padding: 1rem;
+		border-radius: 1rem;
+		margin-bottom: 0.5rem;
+		font-weight: 500;
+		font-size: 0.6rem;
+		color: var(--gray);
+		text-align: start;
+		width: 100%;
+	}
+	.list__item.dragging {
+		opacity: 0.5;
+		background-color: var(--gray-light);
+	}
+	.list__item__poster {
+		width: 80px;
+		height: 80px;
+		border-radius: 8px;
+		overflow: hidden;
+		border: 1px solid var(--indigo);
+	}
+	.list__item__poster img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.list__item__info {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		margin-left: 15px;
+		gap: 0.5rem;
+	}
+	.list__item__name {
+		font-weight: 600;
+		font-size: 0.9rem;
+		color: var(--indigo);
+		text-align: center;
+	}
+	.list__item__check {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: end;
+	}
+	.list__item__check input[type="checkbox"] {
+		width: 20px;
+		height: 20px;
+		cursor: pointer;
+		accent-color: var(--indigo);
+	}
+</style>
+
+<script type="module" client:load>
+	document.addEventListener("DOMContentLoaded", () => {
+		const checkboxes = document.querySelectorAll(`.list__item__check input[type="checkbox"]`);
+        // Guardamos el valor original para cada ID
+		const initialProgress = {}; 
+
+		checkboxes.forEach((item) => {
+			const id = item.getAttribute("data-id");
+			const progressText = document.querySelector(`#progress-${id}`);
+			
+			// Guardamos el progreso original al iniciar
+			if (!initialProgress[id]) {
+                // Metodo Match busca el primer número en el texto y sino devuelve "0"
+				const originalValue = progressText.textContent.match(/\d+/)?.[0] || "0";
+				initialProgress[id] = originalValue;
+			}
+
+			item.addEventListener("change", () => {
+				if (item.checked) {
+					progressText.textContent = "Porcentaje visto: 100%";
+				} else {
+					progressText.textContent = `Porcentaje visto: ${initialProgress[id]}%`;
+				}
+			});
+		});
+	});
+</script>
