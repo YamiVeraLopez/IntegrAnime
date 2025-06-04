@@ -1,7 +1,4 @@
 ---
-import Header from '@components/Header.astro';
-import Footer from '@components/Footer.astro';
-import PageLayout from '@layouts/PageLayout.astro';
 import Carrusel  from '../components/Carrusel.astro';
 import CardList from '@components/CardList.astro';
 import Tendencias from '@components/Tendencias.astro';
@@ -10,8 +7,6 @@ import EnEmision from '@components/EnEmision.astro';
 //URL__API = 'https://api.jikan.moe/v4/top/anime';
 ---
 
-
-<PageLayout>
 
     <main>
         <!-- Carrusel -->
@@ -46,7 +41,7 @@ import EnEmision from '@components/EnEmision.astro';
         <!-- En emisión -->
             <EnEmision />
     </main>
-</PageLayout>
+
 <script>
     // Aquí puedes agregar cualquier script necesario para la página+
 </script>
