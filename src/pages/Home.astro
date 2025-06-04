@@ -4,6 +4,9 @@ import Footer from '@components/Footer.astro';
 import PageLayout from '@layouts/PageLayout.astro';
 import Carrusel  from '../components/Carrusel.astro';
 import CardList from '@components/CardList.astro';
+import Tendencias from '@components/Tendencias.astro';
+import Finalizados from '@components/Finalizados.astro';
+import EnEmision from '@components/EnEmision.astro';
 //URL__API = 'https://api.jikan.moe/v4/top/anime';
 ---
 
@@ -37,20 +40,11 @@ import CardList from '@components/CardList.astro';
             </CardList>
         </section>
         <!-- Tendencias -->
-            <section>
-                <h2>Tendencias</h2>
-                <p>En construcción...</p>
-            </section>
+            <Tendencias />
         <!-- Finalizados -->
-            <section>
-                <h2>Finalizados</h2>
-                <p>En construcción...</p>
-            </section>
+            <Finalizados />
         <!-- En emisión -->
-            <section>
-                <h2>En emisión</h2>
-                <p>En construcción...</p>
-            </section>
+            <EnEmision />
     </main>
 </PageLayout>
 <script>
