@@ -1,23 +1,24 @@
 ---
+import ButtonCard from '@components/ButtonCard.astro';
+
 // filepath: src/components/Tendencias.astro
 const res = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
 if (!res.ok) {
   throw new Error('Error al cargar las tendencias');
 }
 const data = await res.json();
-const tendencias = data.data
-  .sort((a: { rank: number }, b: { rank: number }) => a.rank - b.rank) // Ordena por rank ascendente (mejor rank primero)
-  .slice(0, 6);
+const tendencias = data.data.slice(0, 6);
 ---
 
 
 <section  class="tendencias">
   <h2>Tendencias</h2>
   <ul class="tendencias-list">
-    {tendencias.map((anime: { images: { jpg: { image_url: string } }, title: string }) => (
+    {tendencias.map((anime: { images: { jpg: { image_url: string } }, title: string, mal_id: number }) => (
       <li class="tendencia-item">
         <img src={anime.images.jpg.image_url} alt={anime.title} width="50" />
         <span>{anime.title}</span>
+        <ButtonCard mal_id={anime.mal_id} />
       </li>
     ))}
   </ul>
@@ -44,7 +45,7 @@ const tendencias = data.data
     gap: 1rem;
   }
 .tendencia-item {
-    width: 200px;
+    width: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -80,4 +81,5 @@ const tendencias = data.data
     text-overflow: ellipsis;
     display: block;
 }
+
 </style>

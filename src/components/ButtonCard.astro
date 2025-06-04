@@ -1,0 +1,81 @@
+---
+type Props = {
+  mal_id: number;
+};
+const { mal_id } = Astro.props;
+---
+
+<div class="content__button__card">
+  <a class="button__card more" href={`https://myanimelist.net/anime/${mal_id}`}>Saber más</a>
+  <button class="button__card view" type="button" data-id={mal_id}>Visto</button>
+  <button class="button__card remove" type="button" data-id={mal_id} style="display:none;">Eliminar de visto</button>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Para cada botón "Visto"
+    document.querySelectorAll('.button__card.view').forEach(viewBtn => {
+      const id = viewBtn.getAttribute('data-id');
+      const removeBtn = viewBtn.parentElement.querySelector('.button__card.remove');
+      let vistos = JSON.parse(localStorage.getItem('animesVistos') || '[]');
+
+      // Mostrar el botón correcto según si está en vistos
+      if (vistos.includes(id)) {
+        viewBtn.style.display = 'none';
+        if (removeBtn) removeBtn.style.display = '';
+      } else {
+        viewBtn.style.display = '';
+        if (removeBtn) removeBtn.style.display = 'none';
+      }
+
+      // Evento para marcar como visto
+      viewBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        let vistos = JSON.parse(localStorage.getItem('animesVistos') || '[]');
+        if (!vistos.includes(id)) {
+          vistos.push(id);
+          localStorage.setItem('animesVistos', JSON.stringify(vistos));
+        }
+        viewBtn.style.display = 'none';
+        if (removeBtn) removeBtn.style.display = '';
+        alert('¡Marcado como visto!');
+      });
+
+      // Evento para eliminar de vistos
+      if (removeBtn) {
+        removeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          let vistos = JSON.parse(localStorage.getItem('animesVistos') || '[]');
+          const nuevos = vistos.filter(v => v !== id);
+          localStorage.setItem('animesVistos', JSON.stringify(nuevos));
+          removeBtn.style.display = 'none';
+          viewBtn.style.display = '';
+          alert('Eliminado de vistos');
+        });
+      }
+    });
+  });
+</script>
+
+<style>
+  .content__button__card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .button__card {
+    margin-bottom: 5px;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+  }
+  .button__card:hover {
+    background-color: #0056b3;
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+import ButtonCard from '@components/ButtonCard.astro';
 // filepath: src/components/EnEmision.astro
 let enEmision = [];
 try {
@@ -18,10 +19,11 @@ try {
 <section class="finalizados">
   <h2>En emisión</h2>
   <ul class="finalizados-list">
-     {enEmision.map((anime: { images: { jpg: { image_url: string } }, title: string }) => (
+     {enEmision.map((anime: { images: { jpg: { image_url: string } }, title: string, mal_id: number }) => (
       <li class="finalizado-item">
         <img src={anime.images.jpg.image_url} alt={anime.title} width="50" />
         <span>{anime.title}</span>
+        <ButtonCard mal_id={anime.mal_id} />
       </li>
     ))}
   </ul>
