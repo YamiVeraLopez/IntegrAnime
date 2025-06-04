@@ -1,0 +1,30 @@
+---
+---
+<div class="container">
+    <h2 class="title__list">Mi lista</h2>
+    <div class="content__card-list">
+        <slot />
+    </div>
+</div>
+
+
+<style>
+    .container {
+        width: 100%;
+        padding: 2rem;
+    }
+    .content__card-list {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 1.5rem;
+        background-color: var(--color-background);
+    }
+    .title__list {
+        font-size:2rem;
+        font-weight: normal;
+        margin-bottom: 1rem;
+        color: var(--color-text);
+    }
+
+</style>
