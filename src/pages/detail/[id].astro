@@ -1,0 +1,159 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+
+
+export async function getStaticPaths() {
+	const res = await fetch("https://api.jikan.moe/v4/top/anime");
+	const { data } = await res.json();
+
+	return data.slice(0, 10).map((anime) => ({
+		params: { id: anime.mal_id.toString() },
+		props: { anime },
+	}));
+}
+
+const { anime } = Astro.props;
+const title = anime.title;
+const description = anime.synopsis;
+const image = anime.images.jpg.large_image_url;
+const genres = anime.genres.map((g) => g.name).join(", ");
+const year = anime.year || "Desconocido";
+const episodes = anime.episodes || "N/A";
+const duration = anime.duration || "N/A";
+const trailerUrl = anime.trailer?.url;
+---
+
+<PageLayout title={title}>
+	<div class="detalle">
+		<div class="detalle__container">
+			<img src={image} alt={title} class="detalle__imagen" />
+			<div class="detalle__contenido">
+				<h1>{title}</h1>
+				<p class="detalle__descripcion">{description}</p>
+				<p class="detalle__autor">Escrito por Tsugumi Ohba</p>
+
+				<button id="calificacionBtn">Calificación</button>
+				<div id="estrellas" style="display: none;">⭐️⭐️⭐️⭐️⭐️</div>
+
+				<div class="detalle__botones">
+					<button id="episodiosBtn" data-episodios={episodes}
+						>Cant. epi</button
+					>
+					<button id="duracionBtn" data-duracion={duration}
+						>Min. total</button
+					>
+				</div>
+
+				<div class="detalle__botones-secundarios">
+					<button id="miLista">Añadir a mi lista</button>
+					{
+						trailerUrl && (
+							<a href={trailerUrl} target="_blank">
+								<button>Ver trailer</button>
+							</a>
+						)
+					}
+				</div>
+
+				<div class="detalle__extras">
+					<button>{genres}</button>
+					<button>{year}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</PageLayout>
+
+<style>
+	.detalle {
+		display: flex;
+		justify-content: center;
+		padding: 2rem;
+	}
+
+	.detalle__container {
+		background-color: #333;
+		color: white;
+		padding: 2rem;
+		display: flex;
+		border-radius: 10px;
+		gap: 2rem;
+		max-width: 80%;
+	}
+
+	.detalle__imagen {
+		width: 300px;
+		border-radius: 10px;
+	}
+
+	.detalle__contenido {
+		flex: 1;
+	}
+
+	.detalle__descripcion {
+		font-size: 0.9rem;
+		color: #ddd;
+	}
+
+	.detalle__autor {
+		margin: 1rem 0;
+	}
+
+	.detalle__botones button,
+	.detalle__botones-secundarios button,
+	.detalle__extras button {
+		background: #aaa;
+		color: black;
+		border: none;
+		padding: 0.5rem 1rem;
+		margin: 0.3rem;
+		border-radius: 20px;
+		cursor: pointer;
+	}
+
+	.detalle__botones-secundarios {
+		margin-top: 1rem;
+	}
+
+    @media screen and (min-width: 768px) {
+        .detalle {
+            padding: 4rem;
+        }    
+
+        .detalle__imagen {
+            width: 400px;
+        }
+    }
+</style>
+
+<script>
+	window.addEventListener("DOMContentLoaded", () => {
+		const starsBtn = document.getElementById("calificacionBtn");
+		const estrellas = document.getElementById("estrellas");
+		const epiBtn = document.getElementById("episodiosBtn");
+		const durBtn = document.getElementById("duracionBtn");
+		const listaBtn = document.getElementById("miLista");
+
+		starsBtn?.addEventListener("click", () => {
+			estrellas.style.display = "block";
+		});
+
+		epiBtn?.addEventListener("click", () => {
+			const totalEpisodios = epiBtn.getAttribute("data-episodios");
+			epiBtn.innerText = totalEpisodios + " epi";
+		});
+
+		durBtn?.addEventListener("click", () => {
+			const duracion = durBtn.getAttribute("data-duracion");
+			durBtn.innerText = duracion;
+		});
+
+		listaBtn?.addEventListener("click", () => {
+			listaBtn.innerText =
+				listaBtn.innerText === "Añadir a mi lista"
+					? "Añadido"
+					: "Añadir a mi lista";
+		});
+	});
+</script>
