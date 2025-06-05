@@ -1,0 +1,193 @@
+---
+import Layout from "@layouts/Layout.astro";
+const { id, title, image, description, status, genres } = Astro.props;
+---
+
+<Layout>
+	<article
+		class="card"
+		data-id={id}
+		data-genres={genres.join(", ")}
+		data-title={title.toLowerCase()}
+	>
+		<picture class="card__image">
+			<img
+				src={image}
+				alt={`Poster de ${title}`}
+				loading="lazy"
+				width="200"
+				height="300"
+			/>
+		</picture>
+		<p class="card__status">{status}</p>
+		<h2 class="card__title">{title}</h2>
+		<p class="card__description">
+			{description?.substring(0, 80) ?? "Sin descripción"}
+		</p>
+		<div class="card__buttons">
+			<a href={`/detail/${id}`}>
+				<button class="card__buttons__button"> Ver más </button>
+			</a>
+			<button
+				class="card__buttons__button card__favorite"
+				aria-label="Agregar a favoritos"
+				type="button"
+				data-id={id}
+			>
+				<span class="sr-only">Favorito</span>
+			</button>
+		</div>
+	</article>
+</Layout>
+<style>
+	.card {
+		display: grid;
+		place-items: center;
+		max-width: 300px;
+		height: 100%;
+		background-color: color-mix(in oklch, var(--white) 90%, transparent);
+		border: 1px solid color-mix(in oklch, var(--indigo) 12%, transparent);
+		border-radius: 0.5rem;
+		padding: 1rem;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		transition: transform 0.3s ease;
+		.card__image {
+			width: 200px;
+			height: auto;
+			border-radius: 0.5rem;
+			img {
+				width: 100%;
+				height: 250px;
+				object-fit: scale-down;
+				border-radius: 8px;
+			}
+		}
+		.card__status {
+			width: fit-content;
+			position: relative;
+			bottom: 15px;
+			left: -30px;
+			background-color: var(--indigo);
+			color: var(--white);
+			padding: 0.2rem 0.5rem;
+			border-radius: 0.5rem;
+			font-size: 0.6rem;
+			font-weight: 500;
+			text-align: center;
+			letter-spacing: 1px;
+		}
+		.card__title {
+			font-size: 0.8rem;
+			font-weight: bold;
+			margin-top: 0.5rem;
+			text-align: center;
+			text-wrap: balance;
+		}
+		.card__description {
+			font-size: 0.6rem;
+			margin-top: 0.2rem;
+			color: var(--black);
+			text-wrap: balance;
+			padding: 0.2rem;
+		}
+		.card__buttons {
+			display: flex;
+			justify-content: space-evenly;
+			align-items: end;
+			width: 70%;
+			.card__buttons__button {
+				font-size: 0.8rem;
+				margin-top: 0.5rem;
+				padding: 0.2rem 0.6rem;
+				background-color: var(--white);
+				color: var(--indigo);
+				border: 1px solid var(--indigo);
+				border-radius: 0.8rem;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+				&:hover {
+					background-color: color-mix(
+						in oklch,
+						var(--indigo) 90%,
+						transparent
+					);
+					color: var(--white);
+				}
+			}
+		}
+		&:hover {
+			transform: scale(1.01);
+		}
+	}
+</style>
+<script>
+  // Versión mejorada del manejo de favoritos
+  const STORAGE_KEY = "myList";
+
+  // Obtener la lista actual
+  function getList() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }
+
+  // Guardar la lista actualizada
+  function saveList(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  // Verificar si un anime está en la lista
+  function isInList(id) {
+    const list = getList();
+    return list.some(item => item.id === id);
+  }
+
+  // Añadir o quitar de la lista
+  function toggleFavorite(card) {
+    const id = Number(card.dataset.id);
+    const title = card.dataset.title;
+    const image = card.querySelector('img').src;
+    
+    const list = getList();
+    const animeData = {
+      id,
+      title,
+      image,
+      status: card.querySelector('.card__status').textContent,
+      genres: card.dataset.genres.split(', '),
+      addedAt: new Date().toISOString(),
+      progress: 0 // Inicializar progreso en 0
+    };
+
+    if (isInList(id)) {
+      // Remover si ya existe
+      const updatedList = list.filter(item => item.id !== id);
+      saveList(updatedList);
+    } else {
+      // Agregar si no existe
+      saveList([...list, animeData]);
+    }
+    
+    updateFavoriteIcons();
+  }
+
+  // Actualizar iconos
+  function updateFavoriteIcons() {
+    const list = getList();
+    document.querySelectorAll(".card__favorite").forEach(btn => {
+      const id = Number(btn.dataset.id);
+      btn.innerHTML = isInList(id)
+        ? '<img src="/heart-fill.svg" alt="Quitar de lista" width="20" height="20">'
+        : '<img src="/heart.svg" alt="Agregar a lista" width="20" height="20">';
+    });
+  }
+
+  // Inicializar
+  document.addEventListener("DOMContentLoaded", updateFavoriteIcons);
+
+  // Delegación de eventos
+  document.addEventListener("click", e => {
+    if (e.target.closest(".card__favorite")) {
+      const card = e.target.closest(".card");
+      toggleFavorite(card);
+    }
+  });
+</script>

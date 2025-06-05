@@ -1,5 +1,6 @@
 ---
 import PageLayout from "@layouts/PageLayout.astro";
+import Card from "@components/Card.astro";
 const pageID = Astro.params.page ?? 1;
 
 export async function getStaticPaths() {
@@ -82,43 +83,14 @@ const uniqueGenres = Array.from(genreSet).sort();
 		<section class="list__series" id="anime-list">
 			{
 				animeData.map((anime) => (
-					<article
-						class="card"
-						data-id={anime.id}
-						data-genres={anime.genres.join(", ")}
-						data-title={anime.title.toLowerCase()}
-					>
-						<picture class="card__image">
-							<img
-								src={anime.image}
-								alt={`Poster de ${anime.title}`}
-								loading="lazy"
-								width="200"
-								height="300"
-							/>
-						</picture>
-						<p class="card__status">{anime.status}</p>
-						<h2 class="card__title">{anime.title}</h2>
-						<p class="card__description">
-							{anime.description?.substring(0, 80) ??
-								"Sin descripción"}
-						</p>
-						<div class="card__buttons">
-							<a href={`/detail/${anime.id}`}>
-								<button class="card__buttons__button">
-									Ver más
-								</button>
-							</a>
-							<button
-								class="card__buttons__button card__favorite"
-								aria-label="Agregar a favoritos"
-								type="button"
-								data-id={anime.id}
-							>
-								<span class="sr-only">Favorito</span>
-							</button>
-						</div>
-					</article>
+					<Card
+						id={anime.id}
+						title={anime.title}
+						image={anime.image}
+						description={anime.description}
+						status={anime.status}
+						genres={anime.genres}
+					/>
 				))
 			}
 		</section>
@@ -154,6 +126,7 @@ const uniqueGenres = Array.from(genreSet).sort();
 		</section>
 	</main>
 </PageLayout>
+
 <style>
 	.header {
 		display: grid;
@@ -279,97 +252,11 @@ const uniqueGenres = Array.from(genreSet).sort();
 			grid-auto-rows: auto;
 			gap: 1rem;
 			place-items: center;
-
-			.card {
-				display: grid;
-				place-items: center;
-				max-width: 300px;
-				height: 100%;
-				background-color: color-mix(
-					in oklch,
-					var(--white) 90%,
-					transparent
-				);
-				border: 1px solid
-					color-mix(in oklch, var(--indigo) 12%, transparent);
-				border-radius: 0.5rem;
-				padding: 1rem;
-				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-				/* position: relative; */
-				transition: transform 0.3s ease;
-				.card__image {
-					width: 200px;
-					height: auto;
-					border-radius: 0.5rem;
-					img {
-						width: 100%;
-						height: 250px;
-						object-fit: scale-down;
-						border-radius: 8px;
-					}
-				}
-				.card__status {
-					width: fit-content;
-					position: relative;
-					bottom: 15px;
-					left: -30px;
-					background-color: var(--indigo);
-					color: var(--white);
-					padding: 0.2rem 0.5rem;
-					border-radius: 0.5rem;
-					font-size: 0.6rem;
-					font-weight: 500;
-					text-align: center;
-					letter-spacing: 1px;
-				}
-				.card__title {
-					font-size: 0.8rem;
-					font-weight: bold;
-					margin-top: 0.5rem;
-					text-align: center;
-					text-wrap: balance;
-				}
-				.card__description {
-					font-size: 0.6rem;
-					margin-top: 0.2rem;
-					color: var(--black);
-					text-wrap: balance;
-					padding: 0.2rem;
-				}
-				.card__buttons {
-					display: flex;
-					justify-content: space-evenly;
-					align-items: end;
-					width: 70%;
-					.card__buttons__button {
-						font-size: 0.8rem;
-						margin-top: 0.5rem;
-						padding: 0.2rem 0.6rem;
-						background-color: var(--white);
-						color: var(--indigo);
-						border: 1px solid var(--indigo);
-						border-radius: 0.8rem;
-						cursor: pointer;
-						transition: background-color 0.3s ease;
-						&:hover {
-							background-color: color-mix(
-								in oklch,
-								var(--indigo) 90%,
-								transparent
-							);
-							color: var(--white);
-						}
-					}
-				}
-				&:hover {
-					transform: scale(1.01);
-				}
-			}
 		}
 		.list__pagination {
 			display: flex;
 			justify-content: center;
-            align-items: center;
+			align-items: center;
 			gap: 1rem;
 			padding: 1rem 0;
 			.list__pagination__link {
@@ -379,7 +266,7 @@ const uniqueGenres = Array.from(genreSet).sort();
 				padding: 0.3rem 0.6rem;
 				border: 1px solid var(--indigo);
 				border-radius: 0.5rem;
-                text-align: center;
+				text-align: center;
 				transition: background-color 0.3s ease;
 				&:hover {
 					background-color: color-mix(
@@ -418,6 +305,55 @@ const uniqueGenres = Array.from(genreSet).sort();
 </style>
 
 <script is:inline>
+	document.addEventListener("DOMContentLoaded", () => {
+		// Elementos del DOM
+		const searchInput = document.getElementById("anime-search");
+		const genreCheckboxes = document.querySelectorAll(
+			'input[name="genre"]'
+		);
+		const animeCards = document.querySelectorAll(".card");
+
+		// Función para filtrar los animes/series
+		function filterAnime() {
+			const searchTerm = searchInput.value.toLowerCase();
+			const selectedGenres = Array.from(genreCheckboxes)
+				.filter((checkbox) => checkbox.checked)
+				.map((checkbox) => checkbox.value.toLowerCase());
+
+			animeCards.forEach((card) => {
+				const title =
+					card.dataset.title ||
+					card
+						.querySelector(".card__title")
+						.textContent.toLowerCase();
+				const genres = card.dataset.genres.toLowerCase();
+
+				// Verificar coincidencia con el buscador
+				const matchesSearch = title.includes(searchTerm);
+
+				// Verificar coincidencia con los géneros seleccionados
+				const matchesGenres = selectedGenres.every((genre) =>
+					genres.includes(genre)
+				);
+
+				// Mostrar u ocultar la tarjeta según los filtros
+				card.style.display =
+					matchesSearch && matchesGenres ? "grid" : "none";
+			});
+		}
+
+		// Event listeners para los filtros
+		searchInput.addEventListener("input", filterAnime);
+		genreCheckboxes.forEach((checkbox) => {
+			checkbox.addEventListener("change", filterAnime);
+		});
+
+		// Aplicar filtros al cargar la página
+		filterAnime();
+	});
+
+
+
 	document.addEventListener("DOMContentLoaded", () => {
 		// Elementos del DOM
 		const searchInput = document.getElementById("anime-search");
@@ -504,3 +440,4 @@ const uniqueGenres = Array.from(genreSet).sort();
 		filterAnime(); // Aplicar filtros al cargar la página
 	});
 </script>
+ -->

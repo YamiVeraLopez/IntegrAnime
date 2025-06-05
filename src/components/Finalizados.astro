@@ -1,5 +1,5 @@
 ---
-import ButtonCard from '@components/ButtonCard.astro';
+import Card from '@components/Card.astro';
 // filepath: src/components/Finalizados.astro
 let finalizados = [];
 try {
@@ -19,11 +19,16 @@ try {
 <section class="finalizados">
   <h2>Finalizados</h2>
   <ul class="finalizados-list">
-     {finalizados.map((anime: { images: { jpg: { image_url: string } }, title: string, mal_id: number }) => (
+     {finalizados.map((anime: { images: { jpg: { image_url: string } }, synopsis: string, status: string, title: string, mal_id: number, genres: { name: string }[] }) => (
       <li class="finalizado-item">
-        <img src={anime.images.jpg.image_url} alt={anime.title} width="50" />
-        <span>{anime.title}</span>
-        <ButtonCard mal_id={anime.mal_id} />
+         <Card
+          id={anime.mal_id}
+          title={anime.title}
+          image={anime.images.jpg.image_url}
+          description={anime.synopsis?.substring(0, 80) ?? "Sin descripción"}
+          status={anime.status}
+          genres={anime.genres.map((genre) => genre.name)}
+        />
       </li>
     ))}
   </ul>
@@ -50,7 +55,7 @@ try {
   gap: 1rem;
 }
 .finalizado-item {
-  width: 200px;
+  width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
