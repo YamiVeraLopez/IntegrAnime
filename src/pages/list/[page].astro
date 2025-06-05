@@ -1,0 +1,506 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+const pageID = Astro.params.page ?? 1;
+
+export async function getStaticPaths() {
+	const totalPages = 10;
+	return Array.from({ length: totalPages }, (_, i) => ({
+		params: { page: `${i + 1}` },
+	}));
+}
+
+// Fetch de datos
+let animeData = [];
+let pagination = {};
+try {
+	const response = await fetch(
+		`https://api.jikan.moe/v4/anime?page=${pageID}&order_by=popularity&sort=asc`
+	);
+
+	if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+	const { data: animeList, pagination: apiPagination } =
+		await response.json();
+
+	animeData = animeList.map((anime) => ({
+		id: anime.mal_id,
+		title: anime.title,
+		image: anime.images.webp.image_url,
+		description: anime.synopsis,
+		status: anime.status,
+		genres: anime.genres.map((genre) => genre.name),
+	}));
+
+	pagination = apiPagination;
+} catch (error) {
+	console.error("Error al cargar los datos:", error);
+	// Puedes añadir aquí un manejo de errores para el usuario
+}
+
+const genreSet = new Set(animeData.flatMap((anime) => anime.genres));
+const uniqueGenres = Array.from(genreSet).sort();
+---
+
+<PageLayout>
+	<header class="header">
+		<section class="header__filter" id="genre-filters">
+			{
+				uniqueGenres.map((genre) => (
+					<label class="header__filter__label">
+						<input
+							type="checkbox"
+							name="genre"
+							value={genre}
+							class="header__filter__input"
+						/>
+						<span class="header__filter__chip">
+							{genre}
+							<span class="header__filter__check-icon" />
+						</span>
+					</label>
+				))
+			}
+		</section>
+
+		<section class="header__search">
+			<div class="header__search__form">
+				<form action="">
+					<input
+						type="search"
+						id="anime-search"
+						autocomplete="off"
+						class="header__search__input"
+						placeholder="Buscar anime..."
+						aria-label="Buscar anime"
+					/>
+				</form>
+			</div>
+		</section>
+	</header>
+
+	<main class="list">
+		<section class="list__series" id="anime-list">
+			{
+				animeData.map((anime) => (
+					<article
+						class="card"
+						data-id={anime.id}
+						data-genres={anime.genres.join(", ")}
+						data-title={anime.title.toLowerCase()}
+					>
+						<picture class="card__image">
+							<img
+								src={anime.image}
+								alt={`Poster de ${anime.title}`}
+								loading="lazy"
+								width="200"
+								height="300"
+							/>
+						</picture>
+						<p class="card__status">{anime.status}</p>
+						<h2 class="card__title">{anime.title}</h2>
+						<p class="card__description">
+							{anime.description?.substring(0, 80) ??
+								"Sin descripción"}
+						</p>
+						<div class="card__buttons">
+							<a href={`/detail/${anime.id}`}>
+								<button class="card__buttons__button">
+									Ver más
+								</button>
+							</a>
+							<button
+								class="card__buttons__button card__favorite"
+								aria-label="Agregar a favoritos"
+								type="button"
+								data-id={anime.id}
+							>
+								<span class="sr-only">Favorito</span>
+							</button>
+						</div>
+					</article>
+				))
+			}
+		</section>
+
+		<section class="list__pagination">
+			{
+				pagination.current_page > 1 && (
+					<a
+						href={`/list/${pagination.current_page - 1}`}
+						class="list__pagination__link"
+						aria-label="Página anterior"
+					>
+						Anterior
+					</a>
+				)
+			}
+			<span class="list__pagination__current">
+				Página {pagination.current_page} de {
+					pagination.last_visible_page
+				}
+			</span>
+			{
+				pagination.has_next_page && (
+					<a
+						href={`/list/${pagination.current_page + 1}`}
+						class="list__pagination__link"
+						aria-label="Página siguiente"
+					>
+						Siguiente
+					</a>
+				)
+			}
+		</section>
+	</main>
+</PageLayout>
+<style>
+	.header {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: auto auto;
+		justify-content: center;
+		gap: 0.3rem;
+		padding: 1rem;
+
+		.header__filter {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+			justify-content: center;
+
+			.header__filter__label {
+				position: relative;
+				cursor: pointer;
+				input {
+					display: none;
+				}
+				.header__filter__chip {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					border: 1px solid var(--indigo);
+					border-radius: 0.8rem;
+					color: var(--indigo);
+					padding: 0.2rem 0.5rem;
+
+					transition: all 0.3s ease;
+					position: relative;
+					&:hover {
+						background-color: color-mix(
+							in oklch,
+							var(--indigo) 20%,
+							transparent
+						);
+					}
+				}
+				.header__filter__input:checked + .header__filter__chip {
+					background-color: var(--indigo);
+					padding-right: 1.5rem;
+					color: var(--white);
+				}
+				.header__filter__input:checked
+					+ .header__filter__chip
+					.header__filter__check-icon {
+					position: absolute;
+					right: 8px;
+					display: block;
+					width: 16px;
+					height: 16px;
+					background-image: url("/check.svg");
+					background-size: contain;
+				}
+			}
+		}
+		.header__search {
+			display: grid;
+			grid-template-columns: 1fr;
+			max-width: 900px;
+			margin: 0 auto;
+			width: -moz-available;
+			place-items: center;
+			height: fit-content;
+			padding: 0.5rem;
+			.header__search__form {
+				display: flex;
+				align-items: center;
+				width: 100%;
+				max-width: 900px;
+				background-color: color-mix(
+					in oklch,
+					var(--white) 80%,
+					transparent
+				);
+				border: 1px solid
+					color-mix(in oklch, var(--indigo) 12%, transparent);
+				border-radius: 0.8rem;
+				padding: 0.5rem;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			}
+			form {
+				width: 100%;
+				max-width: 900px;
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 0;
+				align-items: center;
+				input {
+					width: 100%;
+					font-size: 0.8rem;
+					padding: 0.5rem;
+					border: 1px solid var(--indigo);
+					color: var(--indigo);
+					border-radius: 0.8rem;
+					&:focus {
+						outline: none;
+						border-color: color-mix(
+							in oklch,
+							var(--indigo) 60%,
+							transparent
+						);
+					}
+				}
+			}
+		}
+	}
+
+	/* Sección principal */
+	.list {
+		width: 85%;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 1rem;
+		background-color: color-mix(in oklch, var(--white) 90%, transparent);
+		.list__series {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			grid-auto-rows: auto;
+			gap: 1rem;
+			place-items: center;
+
+			.card {
+				display: grid;
+				place-items: center;
+				max-width: 300px;
+				height: 100%;
+				background-color: color-mix(
+					in oklch,
+					var(--white) 90%,
+					transparent
+				);
+				border: 1px solid
+					color-mix(in oklch, var(--indigo) 12%, transparent);
+				border-radius: 0.5rem;
+				padding: 1rem;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+				/* position: relative; */
+				transition: transform 0.3s ease;
+				.card__image {
+					width: 200px;
+					height: auto;
+					border-radius: 0.5rem;
+					img {
+						width: 100%;
+						height: 250px;
+						object-fit: scale-down;
+						border-radius: 8px;
+					}
+				}
+				.card__status {
+					width: fit-content;
+					position: relative;
+					bottom: 15px;
+					left: -30px;
+					background-color: var(--indigo);
+					color: var(--white);
+					padding: 0.2rem 0.5rem;
+					border-radius: 0.5rem;
+					font-size: 0.6rem;
+					font-weight: 500;
+					text-align: center;
+					letter-spacing: 1px;
+				}
+				.card__title {
+					font-size: 0.8rem;
+					font-weight: bold;
+					margin-top: 0.5rem;
+					text-align: center;
+					text-wrap: balance;
+				}
+				.card__description {
+					font-size: 0.6rem;
+					margin-top: 0.2rem;
+					color: var(--black);
+					text-wrap: balance;
+					padding: 0.2rem;
+				}
+				.card__buttons {
+					display: flex;
+					justify-content: space-evenly;
+					align-items: end;
+					width: 70%;
+					.card__buttons__button {
+						font-size: 0.8rem;
+						margin-top: 0.5rem;
+						padding: 0.2rem 0.6rem;
+						background-color: var(--white);
+						color: var(--indigo);
+						border: 1px solid var(--indigo);
+						border-radius: 0.8rem;
+						cursor: pointer;
+						transition: background-color 0.3s ease;
+						&:hover {
+							background-color: color-mix(
+								in oklch,
+								var(--indigo) 90%,
+								transparent
+							);
+							color: var(--white);
+						}
+					}
+				}
+				&:hover {
+					transform: scale(1.01);
+				}
+			}
+		}
+		.list__pagination {
+			display: flex;
+			justify-content: center;
+            align-items: center;
+			gap: 1rem;
+			padding: 1rem 0;
+			.list__pagination__link {
+				text-decoration: none;
+				color: var(--indigo);
+				font-weight: bold;
+				padding: 0.3rem 0.6rem;
+				border: 1px solid var(--indigo);
+				border-radius: 0.5rem;
+                text-align: center;
+				transition: background-color 0.3s ease;
+				&:hover {
+					background-color: color-mix(
+						in oklch,
+						var(--indigo) 20%,
+						transparent
+					);
+				}
+			}
+			.list__pagination__current {
+				font-size: 1.2rem;
+				font-weight: bold;
+				color: var(--indigo);
+				padding: 0.3rem 0.6rem;
+				border-radius: 0.5rem;
+				background-color: color-mix(
+					in oklch,
+					var(--indigo) 20%,
+					transparent
+				);
+			}
+		}
+	}
+
+	@media screen and (min-width: 480px) {
+		.header {
+			padding: 1rem 2rem;
+			.header__search {
+				.header__search__form {
+					width: 100%;
+					max-width: 100%;
+				}
+			}
+		}
+	}
+</style>
+
+<script is:inline>
+	document.addEventListener("DOMContentLoaded", () => {
+		// Elementos del DOM
+		const searchInput = document.getElementById("anime-search");
+		const genreCheckboxes = document.querySelectorAll(
+			'input[name="genre"]'
+		);
+		const animeCards = document.querySelectorAll(".card");
+		const STORAGE_KEY = "myList";
+
+		// Función para filtrar los animes
+		function filterAnime() {
+			const searchTerm = searchInput.value.toLowerCase();
+			const selectedGenres = Array.from(genreCheckboxes)
+				.filter((checkbox) => checkbox.checked)
+				.map((checkbox) => checkbox.value.toLowerCase());
+
+			animeCards.forEach((card) => {
+				const title =
+					card.dataset.title ||
+					card
+						.querySelector(".card__title")
+						.textContent.toLowerCase();
+				const genres = card.dataset.genres.toLowerCase();
+
+				// Verificar coincidencia con el buscador
+				const matchesSearch = title.includes(searchTerm);
+
+				// Verificar coincidencia con los géneros seleccionados
+				const matchesGenres = selectedGenres.every((genre) =>
+					genres.includes(genre)
+				);
+
+				// Mostrar u ocultar la tarjeta según los filtros
+				card.style.display =
+					matchesSearch && matchesGenres ? "grid" : "none";
+			});
+		}
+
+		// Event listeners para los filtros
+		searchInput.addEventListener("input", filterAnime);
+		genreCheckboxes.forEach((checkbox) => {
+			checkbox.addEventListener("change", filterAnime);
+		});
+
+		// Sistema de favoritos 
+		function getFavorites() {
+			return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+		}
+
+		function saveFavorites(favs) {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(favs));
+		}
+
+		function toggleFavorite(malId) {
+			const favs = getFavorites();
+			const updatedFavs = favs.includes(malId)
+				? favs.filter((id) => id !== malId)
+				: [...favs, malId];
+			saveFavorites(updatedFavs);
+			updateFavoriteIcons();
+		}
+
+		function updateFavoriteIcons() {
+			const favs = getFavorites();
+			document.querySelectorAll(".card__favorite").forEach((btn) => {
+				const malId = Number(btn.dataset.id);
+				btn.innerHTML = favs.includes(malId)
+					? '<img src="/heart-fill.svg" alt="Quitar de favoritos" width="20" height="20">'
+					: '<img src="/heart.svg" alt="Agregar a favoritos" width="20" height="20">';
+			});
+		}
+
+		// Delegación de eventos para los favoritos
+		document.addEventListener("click", (e) => {
+			if (e.target.closest(".card__favorite")) {
+				const card = e.target.closest(".card");
+				const malId = Number(card.dataset.id);
+				toggleFavorite(malId);
+			}
+		});
+
+		// Inicializar
+		updateFavoriteIcons();
+		filterAnime(); // Aplicar filtros al cargar la página
+	});
+</script>
