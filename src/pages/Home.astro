@@ -1,6 +1,6 @@
 ---
 import Carrusel  from '../components/Carrusel.astro';
-import CardList from '@components/CardList.astro';
+import SectionCardList from '@components/SectionCardList.astro';
 import Tendencias from '@components/Tendencias.astro';
 import Finalizados from '@components/Finalizados.astro';
 import EnEmision from '@components/EnEmision.astro';
@@ -18,22 +18,7 @@ import EnEmision from '@components/EnEmision.astro';
                 <img class="img-carrusel" src="public/assets/image/heroacademy.jpg" alt="">
             </Carrusel>
         <!-- Mis listas -->
-        <section>
-            <CardList>
-                <div class="card__list">
-                    <h3>Total</h3>
-                    <p>50</p>
-                </div>
-                <div class="card__list">
-                    <h3>Pendientes</h3>
-                    <p>35</p>
-                </div>
-                <div  class="card__list">
-                    <h3>Vistos</h3>
-                    <p>15</p>
-                </div>
-            </CardList>
-        </section>
+            <SectionCardList title="Mis listas"/>
         <!-- Tendencias -->
             <Tendencias />
         <!-- Finalizados -->
@@ -42,9 +27,59 @@ import EnEmision from '@components/EnEmision.astro';
             <EnEmision />
     </main>
 
-<script>
-    // Aquí puedes agregar cualquier script necesario para la página+
+<!--Funcionalidad de los botones de la card-->
+
+<script type="module">
+  document.addEventListener('DOMContentLoaded', () => {
+    function actualizarBotones() {
+      const vistos = JSON.parse(localStorage.getItem('animesVistos') || '[]');
+      document.querySelectorAll('.button__card.view').forEach(viewBtn => {
+        const id = viewBtn.getAttribute('data-id');
+        const removeBtn = viewBtn.parentElement.querySelector('.button__card.remove');
+        if (vistos.includes(id)) {
+          viewBtn.style.display = 'none';
+          if (removeBtn) removeBtn.style.display = '';
+        } else {
+          viewBtn.style.display = '';
+          if (removeBtn) removeBtn.style.display = 'none';
+        }
+      });
+      // Actualiza el contador si existe
+      const vistosCount = document.getElementById('vistos-count');
+      if (vistosCount) vistosCount.textContent = vistos.length.toString();
+    }
+
+    document.querySelectorAll('.button__card.view').forEach(viewBtn => {
+      viewBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.getAttribute('data-id');
+        let vistos = JSON.parse(localStorage.getItem('animesVistos') || '[]');
+        if (!vistos.includes(id)) {
+          vistos.push(id);
+          localStorage.setItem('animesVistos', JSON.stringify(vistos));
+        }
+        actualizarBotones();
+        alert('¡Marcado como visto!');
+      });
+    });
+
+    document.querySelectorAll('.button__card.remove').forEach(removeBtn => {
+      removeBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.getAttribute('data-id');
+        let vistos = JSON.parse(localStorage.getItem('animesVistos') || '[]');
+        vistos = vistos.filter(v => v !== id);
+        localStorage.setItem('animesVistos', JSON.stringify(vistos));
+        actualizarBotones();
+        alert('Eliminado de vistos');
+      });
+    });
+
+    // Inicializa el estado de los botones y contador al cargar
+    actualizarBotones();
+  });
 </script>
+
 <style>
     .img-carrusel {
     flex: none;
@@ -63,21 +98,4 @@ import EnEmision from '@components/EnEmision.astro';
     border-radius: 120px;
 }
 
-
-    .card__list {
-        background-color: #f0f0f0;
-        text-align: center;
-        width: 25%;
-        padding: 3rem;
-        border-radius: 15px;
-        color: var(--color-text);
-    }
-
-    .card__list h3 {
-        font-size: 1rem;
-        margin-bottom: 1rem;
-    }
-    .card__list p {
-        font-size: 2rem;
-    }
 </style>

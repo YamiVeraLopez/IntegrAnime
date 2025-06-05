@@ -10,8 +10,8 @@ const { mal_id } = Astro.props;
   <button class="button__card view" type="button" data-id={mal_id}>Visto</button>
   <button class="button__card remove" type="button" data-id={mal_id} style="display:none;">Eliminar de visto</button>
 </div>
-
-<script>
+<!-- 
+<script type="module">
   document.addEventListener('DOMContentLoaded', () => {
     // Para cada botón "Visto"
     document.querySelectorAll('.button__card.view').forEach(viewBtn => {
@@ -56,7 +56,7 @@ const { mal_id } = Astro.props;
     });
   });
 </script>
-
+-->
 <style>
   .content__button__card {
     display: flex;

@@ -1,7 +1,7 @@
 ---
 import ButtonCard from '@components/ButtonCard.astro';
 
-// filepath: src/components/Tendencias.astro
+
 const res = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
 if (!res.ok) {
   throw new Error('Error al cargar las tendencias');

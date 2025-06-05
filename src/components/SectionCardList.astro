@@ -1,0 +1,51 @@
+---
+import CardList from "@components/CardList.astro";
+
+
+---
+
+<section>
+            <CardList  title="Mis listas">
+                <div class="card__list">
+                    <h3>Total</h3>
+                    <p>28655</p>
+                </div>
+                <div class="card__list">
+                    <h3>Pendientes</h3>
+                    <p>0</p>
+                </div>
+                <div  class="card__list">
+                    <h3>Vistos</h3>
+                   <p id="vistos-count">0</p>
+                </div>
+            </CardList>
+</section>
+
+
+<script type="module">
+   document.addEventListener('DOMContentLoaded', () => {
+    const vistos = JSON.parse(localStorage.getItem('animesVistos') ?? '[]');
+    const vistosCount = document.getElementById('vistos-count');
+    if (vistosCount) {
+      vistosCount.textContent = vistos.length.toString();
+    }});
+</script>
+<style>
+    
+    .card__list {
+        background-color: #f0f0f0;
+        text-align: center;
+        width: 25%;
+        padding: 3rem;
+        border-radius: 15px;
+        color: var(--color-text);
+    }
+
+    .card__list h3 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    .card__list p {
+        font-size: 2rem;
+    }
+</style>
