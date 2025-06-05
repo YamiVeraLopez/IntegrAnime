@@ -1,0 +1,57 @@
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #fff;
+  color: #111;
+}
+
+.detalle {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.detalle__container {
+  background-color: #333;
+  color: white;
+  padding: 2rem;
+  display: flex;
+  border-radius: 10px;
+  gap: 2rem;
+  max-width: 1000px;
+}
+
+.detalle__imagen {
+  width: 300px;
+  border-radius: 10px;
+}
+
+.detalle__contenido {
+  flex: 1;
+}
+
+.detalle__descripcion {
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.detalle__autor {
+  margin: 1rem 0;
+}
+
+.detalle__botones button,
+.detalle__botones-secundarios button,
+.detalle__extras button {
+  background: #aaa;
+  color: black;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0.3rem;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.detalle__botones-secundarios {
+  margin-top: 1rem;
+}
