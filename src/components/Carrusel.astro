@@ -1,15 +1,24 @@
 ---
-
 ---
 
 <section class="carrusel">
-    
+    <slot />
 </section>
 
-<script>
-
-</script>
-
 <style>
-
-</style>
+.carrusel {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    padding: 1rem;
+    height: 50svh;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+}
+</style>    

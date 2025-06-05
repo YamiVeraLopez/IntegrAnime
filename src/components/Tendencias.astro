@@ -1,0 +1,85 @@
+---
+import ButtonCard from '@components/ButtonCard.astro';
+
+// filepath: src/components/Tendencias.astro
+const res = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
+if (!res.ok) {
+  throw new Error('Error al cargar las tendencias');
+}
+const data = await res.json();
+const tendencias = data.data.slice(0, 6);
+---
+
+
+<section  class="tendencias">
+  <h2>Tendencias</h2>
+  <ul class="tendencias-list">
+    {tendencias.map((anime: { images: { jpg: { image_url: string } }, title: string, mal_id: number }) => (
+      <li class="tendencia-item">
+        <img src={anime.images.jpg.image_url} alt={anime.title} width="50" />
+        <span>{anime.title}</span>
+        <ButtonCard mal_id={anime.mal_id} />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .tendencias {
+    width: 100%;
+    padding: 2rem;
+    background-color: var(--color-background);
+  }
+  .tendencias h2 {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+  }
+  .tendencias-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+.tendencia-item {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f0f0f0;
+    padding: 0.5rem;
+    border-radius: 8px;
+    /* Evita que el texto cambie el tamaño del item */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.tendencia-item:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    cursor: pointer;
+}
+
+.tendencia-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.tendencia-item span {
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+</style>
