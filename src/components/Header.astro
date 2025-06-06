@@ -3,24 +3,13 @@ import Layout from "@layouts/Layout.astro";
 import Home from "@components/icons/Home.astro";
 import AddList from "@components/icons/AddList.astro";
 import User from "@components/icons/User.astro";
+import Search from "./icons/Search.astro";
 ---
 
 <Layout>
 	<header>
 		<nav class="navbar">
 			<ul class="navbar__list">
-				<li class="navbar__list__item" title="Añadir serie"> 
-					<a href="/formulario">
-						<picture>
-							<AddList
-								height="40"
-								width="40"
-								fill="#666666"
-								className="icon"
-							/>
-						</picture>
-					</a>
-				</li>
 				<li class="navbar__list__item" title="Inicio">
 					<a href="/">
 						<picture>
@@ -33,6 +22,30 @@ import User from "@components/icons/User.astro";
 						</picture>
 					</a>
 				</li>
+				<li class="navbar__list__item" title="Añadir serie"> 
+					<a href="/formulario">
+						<picture>
+							<AddList
+								height="40"
+								width="40"
+								fill="#666666"
+								className="icon"
+							/>
+						</picture>
+					</a>
+				</li>
+				<li class="navbar__list__item" title="Buscar serie"> 
+					<a href="/list/1">
+						<picture>
+							<Search
+								height="30"
+								width="30"
+								fill="#666666"
+								className="icon"
+							/>
+						</picture>
+					</a>
+				</li>				
 				<li class="navbar__list__item" title="Mi perfil">
 					<a href="/profile">
 						<picture>
