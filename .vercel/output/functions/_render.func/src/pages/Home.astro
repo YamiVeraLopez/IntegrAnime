@@ -1,0 +1,82 @@
+---
+import Carrusel  from '../components/Carrusel.astro';
+import CardList from '@components/CardList.astro';
+import Tendencias from '@components/Tendencias.astro';
+import Finalizados from '@components/Finalizados.astro';
+import EnEmision from '@components/EnEmision.astro';
+//URL__API = 'https://api.jikan.moe/v4/top/anime';
+---
+
+
+    <main>
+        <!-- Carrusel -->
+            <Carrusel>
+                <img class="img-carrusel" src="public/assets/image/dragon-ball-fighterz-goku-gt_0.webp" alt="">
+                <img class="img-carrusel" src="public/assets/image/chain.jpg" alt="">
+                <img class="img-carrusel" src="public/assets/image/nezuko.jpg" alt="">
+                <img class="img-carrusel" src="public/assets/image/shingeki.jpeg" alt="">
+                <img class="img-carrusel" src="public/assets/image/heroacademy.jpg" alt="">
+            </Carrusel>
+        <!-- Mis listas -->
+        <section>
+            <CardList>
+                <div class="card__list">
+                    <h3>Total</h3>
+                    <p>50</p>
+                </div>
+                <div class="card__list">
+                    <h3>Pendientes</h3>
+                    <p>35</p>
+                </div>
+                <div  class="card__list">
+                    <h3>Vistos</h3>
+                    <p>15</p>
+                </div>
+            </CardList>
+        </section>
+        <!-- Tendencias -->
+            <Tendencias />
+        <!-- Finalizados -->
+            <Finalizados />
+        <!-- En emisión -->
+            <EnEmision />
+    </main>
+<script>
+    // Aquí puedes agregar cualquier script necesario para la página+
+</script>
+<style>
+    .img-carrusel {
+    flex: none;
+    width: 10%;
+    height: 95%;
+    border-radius: 180px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+.img-carrusel:hover {
+    transform: scale(1.05);
+    width: 45%;
+    margin: 0 10px;
+    border-radius: 120px;
+}
+
+
+    .card__list {
+        background-color: #f0f0f0;
+        text-align: center;
+        width: 25%;
+        padding: 3rem;
+        border-radius: 15px;
+        color: var(--color-text);
+    }
+
+    .card__list h3 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    .card__list p {
+        font-size: 2rem;
+    }
+</style>

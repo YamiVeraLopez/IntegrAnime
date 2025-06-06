@@ -1,0 +1,12 @@
+import { c as createComponent, a as createAstro, m as maybeRenderHead, b as addAttribute, r as renderTemplate } from './astro/server_BCkfWrbs.mjs';
+/* empty css                         */
+
+const $$Astro = createAstro();
+const $$AuthForm = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$AuthForm;
+  const { mode = "login" } = Astro2.props;
+  return renderTemplate`${maybeRenderHead()}<form class="auth-form"${addAttribute(mode === "login" ? "login-form" : "register-form", "id")} data-astro-cid-tcef4trh> ${mode === "register" && renderTemplate`<div class="form-group" data-astro-cid-tcef4trh> <label for="banner-url" data-astro-cid-tcef4trh>URL del Banner</label> <input type="url" id="banner-url" placeholder="https://ejemplo.com/banner.jpg" required data-astro-cid-tcef4trh> <small class="error-message" id="banner-error" data-astro-cid-tcef4trh></small> </div>`} ${mode === "register" && renderTemplate`<div class="form-group" data-astro-cid-tcef4trh> <label for="avatar-url" data-astro-cid-tcef4trh>URL de Foto de Perfil</label> <input type="url" id="avatar-url" placeholder="https://ejemplo.com/avatar.jpg" required data-astro-cid-tcef4trh> <small class="error-message" id="avatar-error" data-astro-cid-tcef4trh></small> </div>`} <div class="form-group" data-astro-cid-tcef4trh> <label for="username" data-astro-cid-tcef4trh>Usuario</label> <input type="text" id="username" minlength="3" maxlength="20" required data-astro-cid-tcef4trh> <small class="error-message" id="username-error" data-astro-cid-tcef4trh></small> </div> <div class="form-group" data-astro-cid-tcef4trh> <label for="password" data-astro-cid-tcef4trh>Contraseña</label> <input type="password" id="password" minlength="6" required data-astro-cid-tcef4trh> <small class="error-message" id="password-error" data-astro-cid-tcef4trh></small> </div> ${mode === "register" && renderTemplate`<div class="form-group" data-astro-cid-tcef4trh> <label for="confirm-password" data-astro-cid-tcef4trh>Confirmar Contraseña</label> <input type="password" id="confirm-password" required data-astro-cid-tcef4trh> <small class="error-message" id="confirm-error" data-astro-cid-tcef4trh></small> </div>`} <button type="submit" class="submit-btn" data-astro-cid-tcef4trh> ${mode === "login" ? "Iniciar Sesi\xF3n" : "Registrarse"} </button> </form> `;
+}, "C:/Users/EQUIPO/Desktop/ProyectoIntegrarTec/IntegrAnime/src/components/AuthForm.astro", void 0);
+
+export { $$AuthForm as $ };
