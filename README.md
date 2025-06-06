@@ -1,48 +1,43 @@
-# Astro Starter Kit: Basics
+# 🎌 IntegrAnime
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+![imagen](https://github.com/user-attachments/assets/3c64691f-2250-49cc-a5fb-68083f29e9ea)
+ <!-- Reemplaza con tu propio banner -->
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+**Plataforma de integración para fans del anime** | Desarrollado con Astro 🚀
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYamiVeraLopez%2FIntegrAnime)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## ✨ Características
 
-## 🚀 Project Structure
+- 🔍 Catálogo completo de animes
+- 💬 Comunidad interactiva
+- 🎮 Integración con plataformas de streaming
+- 📅 Calendario de estrenos
+- 🌈 Diseño responsive y accesible
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🛠 Stack Tecnológico
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+| Tecnología       | Uso                          |
+|------------------|------------------------------|
+| Astro            | Framework principal          |
+| PNPM             | Gestión de paquetes          |
+| Vercel           | Hosting y despliegue         |
+| Anime API        | Datos de anime               |
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
 
-## 🧞 Commands
+## 🚀 Instalación
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/YamiVeraLopez/IntegrAnime.git
+   cd IntegrAnime
+2. Instalá dependencias:
+   ```bash
+   pnpm install
+3. Inicia el servidor::
+   ```bash
+   pnpm run dev
+4. Abre en tu navegador:
+   ```bash
+   http://localhost:4321   
